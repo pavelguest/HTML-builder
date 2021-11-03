@@ -12,7 +12,7 @@ fs.readdir(findFolder, {withFileTypes: true}, (error, file) => {
             console.error(error)
           } else {
             const arrFile = fileType.name.split('.');
-            console.log(`${arrFile[0]} - ${arrFile[1]} - ${stats.size*0.001}kb`);
+            console.log(`${arrFile[0]} - ${arrFile[1]} - ${stats.size}b`);
           }
         });
       }

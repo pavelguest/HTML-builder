@@ -11,13 +11,13 @@ const rl = readline.createInterface({
 const inputText = fs.createWriteStream(path.join(__dirname, 'text.txt'))
 
 stdout.write(`Please enter any text:\n`);
-stdin.on('data', chunk => {
-  inputText.write(chunk)
-})
 rl.on('line', (line) => {
-    switch (line) {
-      case 'exit':
-        rl.close(); }
+  switch (line) {
+    case 'exit':
+      rl.close();
+     }
+    inputText.write(`${line}\n`)
+
     })
 
 rl.on('close', () => {
