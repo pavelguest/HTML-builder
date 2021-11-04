@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
+
 const findFolderAssets = path.join(__dirname, 'assets');
 const createFolder = path.join(__dirname, 'project-dist');
 const createFolderAssets = path.join(__dirname, 'project-dist', 'assets');
@@ -10,8 +11,9 @@ fs.mkdir(createFolder, { recursive: true }, (err) => {
 });
 
 fs.mkdir(createFolderAssets, { recursive: true }, (err) => {
-  if(err) throw err;
-});
+    if(err) throw err;
+  });
+
 
 //-------------copy-assets----------//
 
@@ -53,7 +55,24 @@ fs.readdir(findFolderCss, {withFileTypes: true}, (err, files) => {
   })
 })
 
-
 //---------------html-----------------//
+
+const templateHtml = fs.createReadStream(path.join(__dirname, 'template.html'), 'utf-8')
+const indexHtml = fs.createWriteStream(path.join(__dirname, 'project-dist', 'index.html'))
+
+templateHtml.on('data', async (chunk) => {
+  async function build() {
+    let htmlFile = chunk.toString();
+    const reg = chunk.match(/{{(.*)}}/gi);
+    for (let e of reg) {
+      const tagName = e.replace(/\W/g, '');
+      const compHtml = await fs.promises.readFile(path.join(__dirname, 'components', `${tagName}.html`), 'utf-8')
+      htmlFile = htmlFile.replace(e, compHtml)
+    }
+    return htmlFile;
+  }
+  const htmlResult = await build()
+  indexHtml.write(htmlResult)
+})
 
 
