@@ -10,10 +10,25 @@ fs.mkdir(createFolder, { recursive: true }, (err) => {
   if(err) throw err;
 });
 
-fs.mkdir(createFolderAssets, { recursive: true }, (err) => {
-    if(err) throw err;
-  });
-
+  fs.access(createFolderAssets, err => {
+    if(err) {
+      fs.promises.mkdir(createFolderAssets, (err) => {
+        if(err) throw err;
+      });
+      copy(findFolderAssets, createFolderAssets)
+    } else {
+      delAndCreate()
+    }
+  })
+  async function delAndCreate() {
+    await fs.promises.rm(createFolderAssets, { recursive: true }, (err) => {
+      if(err) throw err;
+    });
+    await fs.promises.mkdir(createFolderAssets, { recursive: true }, (err) => {
+      if(err) throw err;
+    });
+    copy(findFolderAssets, createFolderAssets)
+  }
 
 //-------------copy-assets----------//
 
