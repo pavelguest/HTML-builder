@@ -78,7 +78,7 @@ const indexHtml = fs.createWriteStream(path.join(__dirname, 'project-dist', 'ind
 templateHtml.on('data', async (chunk) => {
   async function build() {
     let htmlFile = chunk.toString();
-    const reg = chunk.match(/{{(.*)}}/gi);
+    const reg = chunk.match(/{{([a-zA-Z]*)}}/gi);
     for (let e of reg) {
       const tagName = e.replace(/\W/g, '');
       const compHtml = await fs.promises.readFile(path.join(__dirname, 'components', `${tagName}.html`), 'utf-8')
